@@ -10,7 +10,7 @@ document.getElementsByClassName('fbNubFlyout fbDockChatTabFlyout uiContextualLay
 
 var tempchat = document.getElementsByClassName('fbNubFlyout fbDockChatTabFlyout uiContextualLayerParent')[0];
 
-var tempscr = chat.getElementsByClassName('fbNubFlyoutBody scrollable')[0];
+var tempscr = tempchat.getElementsByClassName('fbNubFlyoutBody scrollable')[0];
 
 var oldScroll = tempscr.scrollTop;
 
