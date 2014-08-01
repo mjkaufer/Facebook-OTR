@@ -1,7 +1,7 @@
 //probably won't support group chat for now
 var serverUrl = "http://127.0.0.1:3000";
 
-function extractUsername = function(link) {
+function extractUsername(link) {
     return link.substring(link.lastIndexOf("/") + 1);
 }
 
@@ -42,7 +42,6 @@ input.onkeydown = function(event) {
 var link = extractUsername(document.getElementsByClassName('_2dpe _1ayn')[0].href); //gets current user's username
 
 document.URL.substring(document.URL.lastIndexOf("/") + 1)
-
 
 function getChat(convId) {
     var xmlhttp = new XMLHttpRequest()
