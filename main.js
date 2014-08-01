@@ -16,7 +16,9 @@ MongoClient.connect('mongodb://' + url + '/fbotrc', function(err, db) {
 	var chat = db.collection('chat');
 
 	chat.remove({},function(){
-		chat.insert({message:"Permanent message test thing",from:42,"to":[54],duration:86}, function(){})
+		chat.insert({message:"First",from:42,"to":[54],duration:86,convId:"test", time:new Date(2013,2,1,1,10)}, function(){});
+		chat.insert({message:"Third",from:42,"to":[54],duration:86,convId:"test", time:new Date(2014,2,1,1,10)}, function(){});
+		chat.insert({message:"Second",from:42,"to":[54],duration:86,convId:"test", time:new Date(2013,8,1,1,10)}, function(){});
 	})
 
 	app.get('/', function(req, res){
@@ -25,7 +27,7 @@ MongoClient.connect('mongodb://' + url + '/fbotrc', function(err, db) {
 		})
 	});
 
-	app.post('/message/', function(req, res){//syntax, /message/?message=message&from=userfbid&convId=conversationId
+	app.post('/submit/', function(req, res){//syntax, ?message=message&from=userfbid&convId=conversationId
 		var q = req.query;
 		if(u(q.message) || u(q.from) || u(q.convId))//something is missing
 			res.status(404).end('You dun goofed.');
@@ -48,7 +50,6 @@ MongoClient.connect('mongodb://' + url + '/fbotrc', function(err, db) {
 				})
 			}, doc.time);
 
-
 		});
 
 
@@ -60,6 +61,19 @@ MongoClient.connect('mongodb://' + url + '/fbotrc', function(err, db) {
 		res.end(JSON.stringify(req.query));
 		
 	});
+
+	app.get('/messages/', function(req, res){//?convId=conversationId
+		var q = req.query;
+		if(u(q.convId))
+			res.status(404).end('You dun goofed.');
+
+		chat.find({convId:q.convId}, function(err, doc){
+			doc = doc.sort({time:1}).toArray(function(err,arr){
+				res.end(JSON.stringify(arr));
+			});
+			
+		})
+	})
 
 	app.get('/test/', function(req,res){
 
