@@ -26,7 +26,7 @@ MongoClient.connect('mongodb://' + url + '/fbotrc', function(err, db) {
 			from: 42,
 			"to": [54],
 			convId: "test",
-			sent: new Date()
+			sent: new Date().getTime()
 		}, function() {});
 	setTimeout(function(){
 		chat.insert({
@@ -34,7 +34,7 @@ MongoClient.connect('mongodb://' + url + '/fbotrc', function(err, db) {
 			from: 42,
 			"to": [54],
 			convId: "test",
-			sent: new Date()
+			sent: new Date().getTime()
 		}, function() {});	
 	}, 3000);
 
@@ -44,7 +44,7 @@ MongoClient.connect('mongodb://' + url + '/fbotrc', function(err, db) {
 			from: 42,
 			"to": [54],
 			convId: "test",
-			sent: new Date()
+			sent: new Date().getTime()
 		}, function() {});
 	}, 2000);
 
@@ -68,7 +68,7 @@ MongoClient.connect('mongodb://' + url + '/fbotrc', function(err, db) {
 			from: q.from,
 			convId: q.convId,
 			/*time: duration,*/
-			sent: new Date()
+			sent: new Date().getTime()
 		}, function(err, doc) {
 			doc = doc[0]; //only one query
 			console.log("Submitted a message:")
@@ -93,8 +93,8 @@ MongoClient.connect('mongodb://' + url + '/fbotrc', function(err, db) {
 		var q = req.query;
 		if (u(q.convId))
 			res.status(404).end('You dun goofed.');
-		var d = new Date();
-		d.setTime(d.getTime() - duration);
+		var d = new Date().getTime();
+		d-= duration;
 
 		chat.find({
 			convId: q.convId,
@@ -110,8 +110,8 @@ MongoClient.connect('mongodb://' + url + '/fbotrc', function(err, db) {
 	})
 
 	setInterval(function(){
-		var d = new Date();
-		d.setTime(d.getTime() - duration);
+		var d = new Date().getTime();
+		d-= duration;
 		chat.remove({
 			sent:{$lt:d}//all dates sent before that time
 		}, function(){});
