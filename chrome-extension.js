@@ -12,32 +12,42 @@ var tempchat = document.getElementsByClassName('fbNubFlyout fbDockChatTabFlyout 
 
 var tempscr = tempchat.getElementsByClassName('fbNubFlyoutBody scrollable')[0];
 
-var oldScroll = tempscr.scrollTop;
-
-var el = document.getElementById('mjkaufer2cool'),
+/*var el = document.getElementById('mjkaufer2cool'),
     elClone = el.cloneNode(true);
 
 el.parentNode.replaceChild(elClone, el); //gets rid of fb's events so hitting enter doesn't send the message to fb
 
+var chat = document.getElementsByClassName('fbNubFlyout fbDockChatTabFlyout uiContextualLayerParent')[0];*/
+//^SIMPLY APPEND A NEW TEXTAREA WITH THE SAME CLASS AND HAVE THE OLD ONE HIDDEN TO MAKE AN EASY WAY TO SWITCH BACK AND FORTH
+
 var chat = document.getElementsByClassName('fbNubFlyout fbDockChatTabFlyout uiContextualLayerParent')[0]; //chatbox
-
-var titlebar = chat.getElementsByClassName('titlebarText')[0];
-var groupChat = titlebar.href.indexOf("messages/conversation-id.") > -1 //whether or not it's a group chat
-var chatid = extractUsername(titlebar.href).replace("conversation-id.", "");
-
-var scr = chat.getElementsByClassName('fbNubFlyoutBody scrollable')[0];
-
-scr.scrollTop = oldScroll; //scrolls to where it was before the cloning
-
 var input = chat.getElementsByClassName('uiTextareaAutogrow _552m')[0]; //where text is put
+input.style.display="none";
+var newInput = document.createElement('textarea');
+newInput.className="uiTextareaAutogrow _552m";
 
-
-input.onkeydown = function(event) {
+newInput.onkeydown = function(event){
     if (event.which == 13) {
         console.log(this.value); //send to db
         this.value = "";
     }
 }
+
+input.parentElement.appendChild(newInput);
+
+var titlebar = chat.getElementsByClassName('titlebarText')[0];
+var groupChat = titlebar.href.indexOf("messages/conversation-id.") > -1 //whether or not it's a group chat
+var chatid = extractUsername(titlebar.href).replace("conversation-id.", "");
+//var oldScroll = tempscr.scrollTop;
+//var scr = chat.getElementsByClassName('fbNubFlyoutBody scrollable')[0];
+//scr.scrollTop = oldScroll; //scrolls to where it was before the cloning
+
+// input.onkeydown = function(event) {
+//     if (event.which == 13) {
+//         console.log(this.value); //send to db
+//         this.value = "";
+//     }
+// }
 
 var link = extractUsername(document.getElementsByClassName('_2dpe _1ayn')[0].href); //gets current user's username
 
