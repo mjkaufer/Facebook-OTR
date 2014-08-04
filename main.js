@@ -6,6 +6,7 @@ var MongoClient = require('mongodb').MongoClient,
 
 var url = "127.0.0.1";
 var duration = 30000; //30 seconds until messages are removed
+var refreshRate = 10000;//removes finished messages every 10 seconds
 
 function u(v) { //tests if v is undefined or null; returns true if so
 	return v === undefined || v === null;
@@ -24,27 +25,31 @@ MongoClient.connect('mongodb://' + url + '/fbotrc', function(err, db) {
 			message: "First",
 			from: 42,
 			"to": [54],
-			duration: 86,
 			convId: "test",
-			time: new Date(2013, 2, 1, 1, 10)
+			sent: new Date()
 		}, function() {});
+	setTimeout(function(){
 		chat.insert({
 			message: "Third",
 			from: 42,
 			"to": [54],
-			duration: 86,
 			convId: "test",
-			time: new Date(2014, 2, 1, 1, 10)
-		}, function() {});
+			sent: new Date()
+		}, function() {});	
+	}, 3000);
+
+	setTimeout(function(){
 		chat.insert({
 			message: "Second",
 			from: 42,
 			"to": [54],
-			duration: 86,
 			convId: "test",
-			time: new Date(2013, 8, 1, 1, 10)
+			sent: new Date()
 		}, function() {});
-	})
+	}, 2000);
+
+
+	});
 
 	app.get('/', function(req, res) {
 		chat.findOne({}, {}, function(err, r) {
@@ -62,7 +67,7 @@ MongoClient.connect('mongodb://' + url + '/fbotrc', function(err, db) {
 			message: q.message,
 			from: q.from,
 			convId: q.convId,
-			time: duration,
+			/*time: duration,*/
 			sent: new Date()
 		}, function(err, doc) {
 			doc = doc[0]; //only one query
@@ -70,11 +75,11 @@ MongoClient.connect('mongodb://' + url + '/fbotrc', function(err, db) {
 			console.log(doc);
 			var postId = doc._id;
 
-			setTimeout(function() {
-				chat.remove(postId, function() {
-					console.log("Removed post " + postId);
-				})
-			}, doc.time);
+			// setTimeout(function() {
+			// 	chat.remove(postId, function() {
+			// 		console.log("Removed post " + postId);
+			// 	})
+			// }, doc.time);//implementing a more efficient way
 
 		});
 
@@ -88,9 +93,12 @@ MongoClient.connect('mongodb://' + url + '/fbotrc', function(err, db) {
 		var q = req.query;
 		if (u(q.convId))
 			res.status(404).end('You dun goofed.');
+		var d = new Date();
+		d.setTime(d.getTime() - duration);
 
 		chat.find({
-			convId: q.convId
+			convId: q.convId,
+			sent:{$gte:d}//all dates sent after that time, 'duration' seconds ago
 		}, function(err, doc) {
 			doc = doc.sort({
 				time: 1
@@ -100,6 +108,14 @@ MongoClient.connect('mongodb://' + url + '/fbotrc', function(err, db) {
 			});
 		})
 	})
+
+	setInterval(function(){
+		var d = new Date();
+		d.setTime(d.getTime() - duration);
+		chat.remove({
+			sent:{$lt:d}//all dates sent before that time
+		}, function(){});
+	}, refreshRate);
 
 	app.listen(3000);
 
