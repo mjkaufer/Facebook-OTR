@@ -33,7 +33,24 @@ newInput.onkeydown = function(event){
     }
 }
 
-input.parentElement.appendChild(newInput);
+input.parentElement.appendChild(newInput);//now the new textbox is there
+
+var x = '<a data-hover="tooltip" aria-label="Toggle off-the-record mode. Red means off the record." class="button" style="background-color:#D91E18;width:16px;height:16px;margin-top:5px;border-radius:16px;" data-ft="{&quot;tn&quot;:&quot;+F&quot;}" role="button" id="secure-toggle"></a>'
+document.getElementsByClassName('mls titlebarButtonWrapper rfloat _ohf')[0].innerHTML = x + document.getElementsByClassName('mls titlebarButtonWrapper rfloat _ohf')[0].innerHTML
+var button = document.getElementById('secure-toggle');
+button.onclick=function(){//kind of works, but also miniminzes chat window
+	switchInputVisibility();
+}
+
+function switchInputVisibility(){
+	input.style.display = input.style.display == "none" ? "" : "none";
+	newInput.style.display = newInput.style.display == "none" ? "" : "none";
+	button.style.backgroundColor = button.style.backgroundColor == "rgb(217, 30, 24)" ? "#26A65B" : "#D91E18";
+}//toggles back and forth
+
+function isDefaultInputActive(){
+	return input.style.display == "";//tells if the normal facebook input is active or not
+}
 
 var titlebar = chat.getElementsByClassName('titlebarText')[0];
 var groupChat = titlebar.href.indexOf("messages/conversation-id.") > -1 //whether or not it's a group chat
