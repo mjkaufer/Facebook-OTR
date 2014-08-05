@@ -8,12 +8,14 @@ function extractUsername(link) {
 
 window.onload=function(){
     var interval = setInterval(function(){
-        if(input===null)//input isn't defined yet, which means either chatboxes didn't render yet or there's no chat boxes
+        if(!u(document.getElementsByClassName('fbNubFlyout fbDockChatTabFlyout uiContextualLayerParent')[0]) && !u(document.getElementsByClassName('uiTextareaAutogrow _552m')[0])){//page has rendered
             setup();
-        else{//everything's rendered
             clearInterval(interval);
-            finished();//to call once page and random facebook stuff has rendered
         }
+        // else{//everything's rendered
+        //     clearInterval(interval);
+        //     finished();//to call once page and random facebook stuff has rendered
+        // }
     },100)
 }
 
@@ -24,7 +26,7 @@ function finished(){
 
 function setup(){
     chat = document.getElementsByClassName('fbNubFlyout fbDockChatTabFlyout uiContextualLayerParent')[0]; //chatbox
-    input = chat.getElementsByClassName('uiTextareaAutogrow _552m')[0] || null; //where text is put
+    input = chat.getElementsByClassName('uiTextareaAutogrow _552m')[0]; //where text is put
     input.style.display="none";
     newInput = document.createElement('textarea');
     newInput.className="uiTextareaAutogrow _552m";
@@ -49,6 +51,10 @@ function setup(){
     titlebar = chat.getElementsByClassName('titlebarText')[0];
     groupChat = titlebar.href.indexOf("messages/conversation-id.") > -1 //whether or not it's a group chat
     chatId = extractUsername(titlebar.href).replace("conversation-id.", "");
+    link = extractUsername(document.getElementsByClassName('_2dpe _1ayn')[0].href); //gets current user's username
+    chatId = [chatId,link].sort().join("");
+    console.log(chatId);
+    console.log("THE ID");//we need a better, securer way to generate the id
     //var oldScroll = tempscr.scrollTop;
     //var scr = chat.getElementsByClassName('fbNubFlyoutBody scrollable')[0];
     //scr.scrollTop = oldScroll; //scrolls to where it was before the cloning
@@ -60,10 +66,8 @@ function setup(){
     //     }
     // }
 
-    link = extractUsername(document.getElementsByClassName('_2dpe _1ayn')[0].href); //gets current user's username
-
     //document.URL.substring(document.URL.lastIndexOf("/") + 1);forgot what this is actually doing...
-
+    finished();
 }
 
 function switchInputVisibility(){
@@ -104,4 +108,8 @@ function send(message, convId) { //still need a way to generate the convid effec
     var url = serverUrl + "/submit?message=" + message + "&from=" + link + "&convId=" + convId;
     xmlhttp.open("GET", url, true);
     xmlhttp.send();
+}
+
+function u(a){
+    return a===null || a===undefined;
 }
