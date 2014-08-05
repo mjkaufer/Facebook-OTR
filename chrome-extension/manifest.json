@@ -1,0 +1,25 @@
+{
+  "name": "Facebook-OTR",
+  "version": "1.0",
+  "manifest_version": 2,
+  "permissions": [
+    "management",
+    "webRequest",
+    "webRequestBlocking",
+    "*://*.facebook.com/*"
+  ],
+  "background": {
+    "scripts": ["background.js"],
+    "persistent": true
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "*://*.facebook.com/*"
+      ],
+      "js": [
+        "script.js"
+      ]
+    }
+  ]
+}

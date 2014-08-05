@@ -28,25 +28,52 @@ MongoClient.connect('mongodb://' + url + '/fbotrc', function(err, db) {
 			convId: "test",
 			sent: new Date().getTime()
 		}, function() {});
-	setTimeout(function(){
-		chat.insert({
-			message: "Third",
-			from: 42,
-			"to": [54],
-			convId: "test",
-			sent: new Date().getTime()
-		}, function() {});	
-	}, 3000);
+		setTimeout(function(){
+			chat.insert({
+				message: "Third",
+				from: 42,
+				"to": [54],
+				convId: "test",
+				sent: new Date().getTime()
+			}, function() {});	
+		}, 3000);
 
-	setTimeout(function(){
+		setTimeout(function(){
+			chat.insert({
+				message: "Second",
+				from: 42,
+				"to": [54],
+				convId: "test",
+				sent: new Date().getTime()
+			}, function() {});
+		}, 2000);
+
 		chat.insert({
-			message: "Second",
+			message: "Number 1",
 			from: 42,
 			"to": [54],
-			convId: "test",
-			sent: new Date().getTime()
+			convId: "test2",
+			sent: new Date().getTime() + 60000 * 60 * 24
 		}, function() {});
-	}, 2000);
+		setTimeout(function(){
+			chat.insert({
+				message: "Number 3",
+				from: 42,
+				"to": [54],
+				convId: "test2",
+				sent: new Date().getTime() + 60000 * 60 * 24
+			}, function() {});	
+		}, 3000);
+
+		setTimeout(function(){
+			chat.insert({
+				message: "Number 2",
+				from: 42,
+				"to": [54],
+				convId: "test2",
+				sent: new Date().getTime() + 60000 * 60 * 24//a day's head start
+			}, function() {});
+		}, 2000);
 
 
 	});
