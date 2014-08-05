@@ -35,6 +35,7 @@ function setup(){
     newInput.onkeydown = function(event){
         if (event.which == 13) {
             console.log(this.value); //send to db
+            sendChat(chatId,this.value);//sends to db
             this.value = "";
         }
     }
@@ -52,7 +53,7 @@ function setup(){
     // titlebar = chat.getElementsByClassName('titlebarText')[0];
     // groupChat = titlebar.href.indexOf("messages/conversation-id.") > -1 //whether or not it's a group chat
     // chatId = extractUsername(titlebar.href).replace("conversation-id.", "");
-    // link = extractUsername(document.getElementsByClassName('_2dpe _1ayn')[0].href); //gets current user's username
+    link = extractUsername(document.getElementsByClassName('_2dpe _1ayn')[0].href); //gets current user's username
     // chatId = [chatId,link].sort().join("");
     console.log(chatId);
     console.log("THE ID");//we need a better, securer way to generate the id
@@ -96,18 +97,17 @@ function getChat(convId) {
     xmlhttp.send();
 }
 
-function send(message, convId) { //still need a way to generate the convid effectively
+function sendChat(convId, message) {
     var xmlhttp = new XMLHttpRequest()
 
-    xmlhttp.onreadystatechange = function() {
-        if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
-            var response = xmlhttp.responseText; //to be appended into chat
-        } else if (xmlhttp.status != 200) {
-            alert("Message did not send - error")
-        }
-    }
-    var url = serverUrl + "/submit?message=" + message + "&from=" + link + "&convId=" + convId;
-    xmlhttp.open("GET", url, true);
+    // xmlhttp.onreadystatechange = function() {
+    //     if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+    //         var response = xmlhttp.responseText; //to be appended into chat
+    //         console.log(response);
+    //     }
+    // }
+    var url = serverUrl + "/submit?convId=" + convId + "&from=" + link + "&message=" + encodeURI(message);
+    xmlhttp.open("POST", url, true);
     xmlhttp.send();
 }
 
