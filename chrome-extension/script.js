@@ -26,6 +26,7 @@ function finished(){
 
 function setup(){
     chat = document.getElementsByClassName('fbNubFlyout fbDockChatTabFlyout uiContextualLayerParent')[0]; //chatbox
+    chatId = extractUsername(chat.getElementsByClassName('itemAnchor')[0].href);
     input = chat.getElementsByClassName('uiTextareaAutogrow _552m')[0]; //where text is put
     input.style.display="none";
     newInput = document.createElement('textarea');
@@ -48,11 +49,11 @@ function setup(){
     	switchInputVisibility();
     }
 
-    titlebar = chat.getElementsByClassName('titlebarText')[0];
-    groupChat = titlebar.href.indexOf("messages/conversation-id.") > -1 //whether or not it's a group chat
-    chatId = extractUsername(titlebar.href).replace("conversation-id.", "");
-    link = extractUsername(document.getElementsByClassName('_2dpe _1ayn')[0].href); //gets current user's username
-    chatId = [chatId,link].sort().join("");
+    // titlebar = chat.getElementsByClassName('titlebarText')[0];
+    // groupChat = titlebar.href.indexOf("messages/conversation-id.") > -1 //whether or not it's a group chat
+    // chatId = extractUsername(titlebar.href).replace("conversation-id.", "");
+    // link = extractUsername(document.getElementsByClassName('_2dpe _1ayn')[0].href); //gets current user's username
+    // chatId = [chatId,link].sort().join("");
     console.log(chatId);
     console.log("THE ID");//we need a better, securer way to generate the id
     //var oldScroll = tempscr.scrollTop;
